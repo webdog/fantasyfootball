@@ -2,16 +2,14 @@
 import requests
 import xml.etree.ElementTree as ET
 
-apikey = ""
-v = "v1"
-base_url = "http://api.espn.com/"
+auth = {"apikey": "api_key_str"}
+base_url = "http://api.espn.com/v1/sports"
 
-all_sports_req = base_url+v+"/sports?apikey="+apikey
+resp = requests.get(base_url, params=auth)
+sc = int(resp.status_code)
 
-resp = requests.get(all_sports_req)
-
-if "200" in str(resp):
-	print "API request succeeded"
+if sc == 200:
+	print resp.text
 else:
 	print "API success failed. Reason:"
 	print resp
