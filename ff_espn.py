@@ -1,15 +1,18 @@
 #!/usr/bin/python
-import urllib2, os, re
+import requests
+import xml.etree.ElementTree as ET
 
-apipw = ""
+apikey = ""
+v = "v1"
+base_url = "http://api.espn.com/"
 
-print "This is the data gathering program for Weber's FF database."
-print "Input 1 to begin, 0 to exit"
-input = int(raw_input(">"))
+all_sports_req = base_url+v+"/sports?apikey="+apikey
 
-if input == 1:
-	req = urllib2.urlopen("http://api.espn.com/v1/sports/basketball/nba/teams/4?rostertype=active&_accept=text%%2Fxml&apikey=%s" % apipw)
-	print req.read()
+resp = requests.get(all_sports_req)
+
+if "200" in str(resp):
+	print "API request succeeded"
 else:
-	print "Nothing!"
-	
+	print "API success failed. Reason:"
+	print resp
+
