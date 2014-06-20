@@ -17,23 +17,31 @@ def new_query():
 def gather_info(x):
 	auth = {"apikey" : "apikey_str"}
 	base_url = "http://api.espn.com/v1/sports"
-	fb = "/football/nfl/teams"
-	hk = "/hockey/nhl/teams"
-	bb = "/basketball/nba/teams"
-	bbl = "/baseball/mlb/teams"
-	uri = base_url
+	sp = {
+			'fb': '/football/nfl/teams',
+			'hk': '/hockey/nhl/teams',
+			'bb': '/basketball/nba/teams',
+			'bbl': '/baseball/mlb/teams'
+			}
+
+	#Changed to dict for more flexibility and cleaner code.
+	#fb = "/football/nfl/teams"
+	#hk = "/hockey/nhl/teams"
+	#bb = "/basketball/nba/teams"
+	#bbl = "/baseball/mlb/teams"
+	#uri = base_url
 
 	if x == 1:
-		uri = uri+hk
+		uri = uri+sp['hk']
 		print "Returning hockey results"
 	elif x == 2:
-		uri  = uri+bb
+		uri  = uri+sp['bb']
 		print "Returning basketball results"
 	elif x == 3:
-		uri = uri+bbl
+		uri = uri+sp['bbl']
 		print "Returning baseball results"
 	elif x == 4:
-		uri = uri+fb
+		uri = uri+sp['fb']
 		print "Returning football results"
 	else:
 		print "Unhandled exception, reason: %s" % x
