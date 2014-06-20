@@ -12,39 +12,45 @@ def new_query():
 		exit()
 	else:
 		print "Passing request to API. Standby"
+		gather_info(x)
 
 def gather_info(x):
-
-	auth = {"apikey" : "api_str"}
+	auth = {"apikey" : "apikey_str"}
 	base_url = "http://api.espn.com/v1/sports"
+	fb = "/football/nfl/teams"
+	hk = "/hockey/nhl/teams"
+	bb = "/basketball/nba/teams"
+	bbl = "/baseball/mlb/teams"
+	uri = base_url
 
-	resp = requests.get(base_url, params=auth)
+	if x == 1:
+		uri = uri+hk
+		print "Returning hockey results"
+	elif x == 2:
+		uri  = uri+bb
+		print "Returning basketball results"
+	elif x == 3:
+		uri = uri+bbl
+		print "Returning baseball results"
+	elif x == 4:
+		uri = uri+fb
+		print "Returning football results"
+	else:
+		print "Unhandled exception, reason: %s" % x
+		exit()
+
+	resp = requests.get(uri, params=auth)
 	rc = int(resp.status_code)
 
 	#HTTP status codes
-	sc = int([
-			200, 
-			400, 
-			401, 
-			403, 
-			404, 
-			500, 
-			504
-			])
+	sc = [int(200), int(400), int(401), int(403), int(404), int(500), int(504)]
 	#Values of HTTP status codes, matched by position of sc
-	sc_r = str([
-			'Successful', 
-			'Bad Request', 
-			'Unuthorized', 
-			'Account Over Quota', 
-			'Not Found', 
-			'Internal Server Error', 
-			'TimeOut'
-			])
+	sc_r = [str('Successful'), str('Bad Request'), str('Unauthorized'), str('Account Over Quota'), str('Not Found'), str('Internal Server Error'), str('TimeOut')]
 	
 	#Check if return code (rc) is 200 (First position of sc). If so, continue.
 	if rc == sc[0]:
 		print sc_r[0]
+		print resp.text
 	#If API request fails the listed elifs will go through the list of common HTTP responses and print out the response.
 	elif rc == sc[1]:
 		print "Request failed. Reason: %s" % sc_r[1]
@@ -65,7 +71,7 @@ def gather_info(x):
 		print "Request failed. Reason: %s" % sc_r[6]
 		exit()
 	elif rc not in sc:
-		print "Request failed. Reason: %s" % rc
+		print "Big failure. Reason: %i" % rc
 		exit()
 	else:
 		"Unexpected Response. Exiting"
@@ -73,5 +79,4 @@ def gather_info(x):
 
 
 if __name__ == "__main__":
-	new_query()
-	
+	new_query()	
