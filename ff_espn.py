@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import requests
-import xml.etree.ElementTree as ET
+import json
+from pprint import pprint
 
 def new_query():
 	print "This is the data collection app that takes data from the ESPN api, and returns data to json format.\n"
@@ -15,7 +16,7 @@ def new_query():
 		gather_info(x)
 
 def gather_info(x):
-	auth = {"apikey" : "apikey_str"}
+	auth = {"apikey" : ""}
 	base_url = "http://api.espn.com/v1/sports"
 	sp = {
 			'fb': '/football/nfl/teams',
@@ -23,13 +24,7 @@ def gather_info(x):
 			'bb': '/basketball/nba/teams',
 			'bbl': '/baseball/mlb/teams'
 			}
-
-	#Changed to dict for more flexibility and cleaner code.
-	#fb = "/football/nfl/teams"
-	#hk = "/hockey/nhl/teams"
-	#bb = "/basketball/nba/teams"
-	#bbl = "/baseball/mlb/teams"
-	#uri = base_url
+	uri = base_url
 
 	if x == 1:
 		uri = uri+sp['hk']
@@ -58,8 +53,16 @@ def gather_info(x):
 	#Check if return code (rc) is 200 (First position of sc). If so, continue.
 	if rc == sc[0]:
 		print sc_r[0]
-		print resp.text
-	#If API request fails the listed elifs will go through the list of common HTTP responses and print out the response.
+	#Assigns df object to resp.text wrapped in json loader
+		df = json.loads(resp.text)
+	#Accesses teams portion of json text
+		team_names = df['sports'][0]['leagues'][0]['teams']
+		for i in team_names:
+	#Concatenates string value of location and name to output
+			print i['location']+' '+i['name']
+			
+	
+	#If API request fails the listed elifs will go through the list ofcommon HTTP responses and print out the response.  
 	elif rc == sc[1]:
 		print "Request failed. Reason: %s" % sc_r[1]
 		exit()
@@ -84,7 +87,6 @@ def gather_info(x):
 	else:
 		"Unexpected Response. Exiting"
 		exit()
-
-
+	
 if __name__ == "__main__":
 	new_query()	
